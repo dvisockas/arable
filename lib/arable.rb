@@ -8,7 +8,9 @@ module Arable
   SKIP_ARABLE_COLUMNS_CLASS_VAR_NAME = :@@skip_arable_columns
 
   def self.models
-    ApplicationRecord.models.reject { _1.class_variable_defined?(SKIP_ARABLE_COLUMNS_CLASS_VAR_NAME) }
+    ApplicationRecord
+      .models
+      .reject { |model| model.class_variable_defined?(SKIP_ARABLE_COLUMNS_CLASS_VAR_NAME) }
   end
 
   def self.column_names_from_schema(table_name)
@@ -56,19 +58,19 @@ module Arable
       arel_table[Arel.star]
     end
   end
-end
 
-ActiveSupport.on_load(:active_record) do |active_record|
-  def inherited(subclass)
-    super
+  module ActiveRecordExtension
+    def inherited(subclass)
+      super
 
-    subclass.extend(Arable::ClassMethods)
+      subclass.extend(Arable::ClassMethods)
 
-    # include Arable only when the class has finished defining itself
-    TracePoint.trace(:end) do |trace|
-      if subclass == trace.self
-        subclass.include(Arable)
-        trace.disable
+      # include Arable only when the class has finished defining itself
+      TracePoint.trace(:end) do |trace|
+        if subclass == trace.self
+          subclass.include(Arable)
+          trace.disable
+        end
       end
     end
   end

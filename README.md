@@ -20,9 +20,34 @@ Or install it yourself as:
 
     $ gem install arable
 
+Extend `ApplicationRecord`, `ActiveRecord::Base` or your base class that is being used by the models:
+
+```ruby
+class ApplicationRecord
+    ...
+    extend Arable::ActiveRecordExtension
+    ...
+end
+
+```
+
 ## Usage
 
-TODO: Write usage instructions here
+If you have a model `User birthday:date`, from now on you can use `User.birthday` directly. This acts as a shorthand for `User.arel_table[:birthday]`:
+
+```ruby
+    def birthdays
+        User.where(User.birthday.eq(Date.today))
+    end
+```
+
+This goes very well together with [arel-extensions gem](https://github.com/Faveod/arel-extensions):
+
+```ruby
+    def legal_aged_users
+        User.where(User.birthday <= 18.years.ago)
+    end
+```
 
 ## Development
 
