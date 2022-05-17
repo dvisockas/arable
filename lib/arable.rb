@@ -65,7 +65,6 @@ ActiveSupport.on_load(:active_record) do |active_record|
     subclass.extend(Arable::ClassMethods)
 
     # include Arable only when the class has finished defining itself
-    ActiveSupport.on_load(subclass)
     TracePoint.trace(:end) do |trace|
       if subclass == trace.self
         subclass.include(Arable)
