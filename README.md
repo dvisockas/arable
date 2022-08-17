@@ -45,9 +45,9 @@ end
 
 ## Roadmap
 
-[x] Support schema.rb
-[x] Support structure.sql
-[] Add tests
+- [x] Support schema.rb
+- [x] Support structure.sql
+- [ ] Add tests
 
 ## Development
 
