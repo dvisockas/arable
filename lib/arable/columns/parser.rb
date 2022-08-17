@@ -1,3 +1,4 @@
+require_relative "../columns"
 require_relative "from_schema"
 require_relative "from_structure"
 require_relative "paths"

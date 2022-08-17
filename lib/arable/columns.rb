@@ -1,1 +1,2 @@
-module Arable::Columns; end
+module Arable::Columns
+end

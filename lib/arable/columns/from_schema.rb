@@ -1,3 +1,4 @@
+require_relative "../columns"
 require_relative "paths"
 
 module Arable::Columns::FromSchema
@@ -21,7 +22,7 @@ module Arable::Columns::FromSchema
 
   private
 
-  def schema
+  def self.schema
     @schema ||= begin
       return unless File.exist?(Arable::Columns::Paths::SCHEMA)
 

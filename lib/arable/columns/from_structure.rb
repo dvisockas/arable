@@ -1,3 +1,4 @@
+require_relative "../columns"
 require_relative "paths"
 
 module Arable::Columns::FromStructure
@@ -16,7 +17,7 @@ module Arable::Columns::FromStructure
 
   private
 
-  def structure
+  def self.structure
     @structure ||= begin
       return unless File.exist?(Arable::Columns::Paths::STRUCTURE)
 
