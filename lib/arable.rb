@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "arable/version"
+require_relative 'arable/version'
+require_relative 'arable/columns/parser'
 
 module Arable
   class Error < StandardError; end
@@ -13,29 +14,10 @@ module Arable
       .reject { |model| model.class_variable_defined?(SKIP_ARABLE_COLUMNS_CLASS_VAR_NAME) }
   end
 
-  def self.column_names_from_schema(table_name)
-    table_definition_match =
-      File
-        .read('db/schema.rb')
-        .match(/create_table "#{table_name}".*?\n(.*?)\n *end/m)
-
-    columns =
-      table_definition_match[1]
-        .lines
-        .reject { |line| line.include?('t.index') }
-        .map { |line| line.match(/t\.[a-z]* "([a-z_]*)"/)[1] }
-
-    if table_definition_match[0].include?('id: false')
-      columns
-    else
-      ['id'] + columns
-    end
-  end
-
   def self.included(klass)
     return if klass.class_variable_defined?(SKIP_ARABLE_COLUMNS_CLASS_VAR_NAME)
 
-    column_names = column_names_from_schema(klass.table_name).map(&:to_sym)
+    column_names = Arable::Columns::Parser.call(klass.table_name).map(&:to_sym)
     illegal_names = column_names & klass.methods
 
     if illegal_names.any?

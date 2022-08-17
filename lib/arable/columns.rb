@@ -1,0 +1,1 @@
+module Arable::Columns; end
